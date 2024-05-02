@@ -11,6 +11,7 @@ import com.example.studenthome1.repositories.ProprietaireRepository;
 import com.example.studenthome1.repositories.VilleRepository;
 import com.example.studenthome1.services.JwtServiceImp;
 import com.example.studenthome1.services.LogementServiceImpt;
+import com.example.studenthome1.services.VilleServiceImp;
 import com.example.studenthome1.services.impl.ProprietaireServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
@@ -28,12 +29,15 @@ public class ProprietereControllers {
 
     private final VilleRepository villeRepository;
 
+    private final VilleServiceImp villeServiceImp;
 
-    public ProprietereControllers(ProprietaireServiceImpl proprietaireService,JwtServiceImp jwtServiceImp,LogementServiceImpt logementServiceImpt,VilleRepository villeRepository) {
+
+    public ProprietereControllers(ProprietaireServiceImpl proprietaireService,JwtServiceImp jwtServiceImp,LogementServiceImpt logementServiceImpt,VilleRepository villeRepository,VilleServiceImp villeServiceImp) {
         this.proprietaireService = proprietaireService;
         this.jwtServiceImp=jwtServiceImp;
         this.logementServiceImpt=logementServiceImpt;
         this.villeRepository=villeRepository;
+        this.villeServiceImp=villeServiceImp;
     }
 
 
@@ -62,14 +66,17 @@ public class ProprietereControllers {
             String token = jwt.substring(7);
             Long proprietaireId = jwtServiceImp.extractId(token);
 
-            Ville ville = new Ville(logementModel.getVilleNon(), logementModel.getCodePostal());
 
-            Ville savedVille = villeRepository.save(ville);
+            Ville ville= villeServiceImp.findByname(logementModel.getVilleNon());
+            if(ville==null){
+                ville = new Ville(logementModel.getVilleNon(), logementModel.getCodePostal());
+                Ville savedVille = villeRepository.save(ville);
+            }
 
             // Créer une nouvelle instance de Logement avec la Ville sauvegardée
             Logement logement = new Logement(logementModel.getSuperficie(), logementModel.getAdresse(),
                     logementModel.getDescription(), logementModel.getPrix(),
-                    true, savedVille, null, null, null, proprietaire, null);
+                    true, ville, null, null, null, proprietaire, null);
 
             // Ajouter les images au logement
             List<Image> images = new ArrayList<>();
@@ -84,6 +91,7 @@ public class ProprietereControllers {
             System.out.println("-------------------------------- probleme");
             return null;
         }
+
     }
 
 
