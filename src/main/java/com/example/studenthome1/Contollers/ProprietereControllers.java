@@ -1,6 +1,7 @@
 package com.example.studenthome1.Contollers;
 
 
+import com.example.studenthome1.dtos.Message;
 import com.example.studenthome1.entities.Image;
 import com.example.studenthome1.entities.Logement;
 import com.example.studenthome1.entities.Proprietaire;
@@ -16,6 +17,7 @@ import com.example.studenthome1.services.impl.ProprietaireServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Member;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,16 +45,31 @@ public class ProprietereControllers {
 
 
     @PostMapping("/create")
-    public void createprop(@RequestBody SignUnRequest signUnRequest){
+    public String createprop(@RequestBody SignUnRequest signUnRequest){
 
-        proprietaireService.ajouterpropiretre(signUnRequest.getNom(), signUnRequest.getPrenon(),signUnRequest.getEmail(), signUnRequest.getAdresse(), signUnRequest.getNumeroTel(), signUnRequest.getTypePropritaire(), signUnRequest.getPassword(),null);
+        if(!signUnRequest.getNom().isEmpty()&& !signUnRequest.getPrenon().isEmpty() && !signUnRequest.getEmail().isEmpty() && !signUnRequest.getAdresse().isEmpty() && !signUnRequest.getNumeroTel().isEmpty() &&!signUnRequest.getTypePropritaire().isEmpty()&& !signUnRequest.getPassword().isEmpty()){
 
+            proprietaireService.ajouterpropiretre(signUnRequest.getNom(), signUnRequest.getPrenon(),signUnRequest.getEmail(), signUnRequest.getAdresse(), signUnRequest.getNumeroTel(), signUnRequest.getTypePropritaire(), signUnRequest.getPassword(),null);
+            return new Message("bien creer").toString();
+        }
+
+        return new Message("un ou plusieur champ vide").toString();
     }
 
     @PostMapping("/delete")
-    public void deleteprop(@RequestBody long id){
+    public String deleteprop(HttpServletRequest request){
 
-        proprietaireService.deleteProprietere(id);
+        String jwt= request.getHeader("Authorization");
+
+        if(jwt!=null && jwt.startsWith("Bearer ")){
+            String token=jwt.substring(7);
+            Long id=jwtServiceImp.extractId(token);
+            proprietaireService.deleteProprietere(id);
+
+            return new Message("bien suprimer").toString();
+        }
+
+        return new Message("probleme dans le token").toString();
 
     }
 
@@ -73,10 +90,12 @@ public class ProprietereControllers {
                 Ville savedVille = villeRepository.save(ville);
             }
 
+            if(logementModel.getAdresse().isEmpty() || logementModel.getAdresse().equals("")|| logementModel.getDescription().isEmpty()|| logementModel.getDescription().equals("")||logementModel.getCodePostal().isEmpty()||logementModel.getCodePostal().equals(""))
+                return null;
             // Créer une nouvelle instance de Logement avec la Ville sauvegardée
             Logement logement = new Logement(logementModel.getSuperficie(), logementModel.getAdresse(),
                     logementModel.getDescription(), logementModel.getPrix(),
-                    true, ville, null, null, null, proprietaire, null);
+                    true, ville, null, null, null, proprietaire, null,logementModel.getNbrDechambre(),logementModel.getNbrlit());
 
             // Ajouter les images au logement
             List<Image> images = new ArrayList<>();

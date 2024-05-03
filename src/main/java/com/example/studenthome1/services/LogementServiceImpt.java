@@ -45,5 +45,28 @@ public class LogementServiceImpt {
 
     }
 
+    public List<Logement> afficherAlllogmentBySearch(String search){
+
+        int ver=0;
+        int entier=0;
+        try {
+            entier = Integer.parseInt(search);
+            ver=1;
+
+        } catch (NumberFormatException e) {
+            System.out.println("La chaîne ne peut pas être convertie en entier.");
+            ver=0;
+        }
+
+        if(ver==1){
+            ver=0;
+            int finalEntier = entier;
+           return logementRepository.findAll().stream().filter(val->val.getNbrDechambre()== finalEntier || val.getNbrlit()== finalEntier).toList();
+        }else{
+            return logementRepository.findAll().stream().filter(val->val.getAdresse().contains(search) || val.getDescription().contains(search) || val.getVille().getNom().contains(search) || val.getVille().getCodePostal().contains(search)).toList();
+        }
+
+    }
+
 
 }

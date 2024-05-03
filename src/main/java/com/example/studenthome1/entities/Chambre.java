@@ -13,8 +13,10 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Chambre extends Logement {
+
     private int numéroChambre;
     private String typeChambre;
+
     @OneToMany(cascade = CascadeType.ALL)
     private List<Lit> lits;
 }

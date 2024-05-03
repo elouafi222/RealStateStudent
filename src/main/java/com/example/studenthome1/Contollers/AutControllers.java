@@ -4,6 +4,7 @@ package com.example.studenthome1.Contollers;
 
 import com.example.studenthome1.dtos.AuthRequestDTO;
 import com.example.studenthome1.dtos.JwtResponseDTO;
+import com.example.studenthome1.dtos.Message;
 import com.example.studenthome1.entities.Proprietaire;
 import com.example.studenthome1.model.SignUnRequest;
 
@@ -67,12 +68,19 @@ public class AutControllers {
     @PostMapping("/signUpParticulier")
     public String signupPrt(@RequestBody SignUnRequest signUnRequest){
 
-        Proprietaire objcreer = new Proprietaire(signUnRequest.getNom(), signUnRequest.getPrenon(),signUnRequest.getEmail() ,signUnRequest.getAdresse(), signUnRequest.getNumeroTel(), signUnRequest.getTypePropritaire(),signUnRequest.getPassword(), null);
-        proprietaireRepository.save(objcreer);
+        if(!signUnRequest.getNom().isEmpty() && !signUnRequest.getNom().equals("") && !signUnRequest.getPrenon().isEmpty()&& !signUnRequest.getEmail().isEmpty() && !signUnRequest.getEmail().equals("")&&!signUnRequest.getAdresse().isEmpty()&& !signUnRequest.getAdresse().equals("")&&!signUnRequest.getNumeroTel().isEmpty()&&!signUnRequest.getNumeroTel().equals("") && !signUnRequest.getPassword().isEmpty()&& !signUnRequest.getPassword().equals("")){
 
-        return objcreer.toString();
+            Proprietaire objcreer = new Proprietaire(signUnRequest.getNom(), signUnRequest.getPrenon(),signUnRequest.getEmail() ,signUnRequest.getAdresse(), signUnRequest.getNumeroTel(), signUnRequest.getTypePropritaire(),signUnRequest.getPassword(), null);
+            proprietaireRepository.save(objcreer);
+
+            return objcreer.toString();
+
+        }
+
+        return new Message("remplir tout les champ").toString();
 
     }
+
 
 
 

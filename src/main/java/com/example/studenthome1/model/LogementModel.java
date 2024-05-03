@@ -15,6 +15,8 @@ public class LogementModel {
 
     private List<String> images;
 
+    private int nbrDechambre;
+    private int nbrlit;
     public LogementModel() {
     }
 
@@ -27,6 +29,23 @@ public class LogementModel {
         this.villeNon = villeNon;
         this.codePostal = codePostal;
         this.images=images;
+        this.nbrDechambre=0;
+        this.nbrlit=0;
+    }
+
+    public LogementModel(float superficie, String adresse, String description, float prix, boolean disponible, String villeNon, String codePostal,List<String> images,int nbrDechambre,int nbrlit) {
+        this.superficie = superficie;
+        Adresse = adresse;
+        Description = description;
+        this.prix = prix;
+        this.disponible = disponible;
+        this.villeNon = villeNon;
+        this.codePostal = codePostal;
+        this.images=images;
+        this.nbrDechambre=0;
+        this.nbrlit=0;
+        this.nbrDechambre=nbrDechambre;
+        this.nbrlit=nbrlit;
     }
 
     public float getSuperficie() {
@@ -91,5 +110,21 @@ public class LogementModel {
 
     public void setImages(List<String> images) {
         this.images = images;
+    }
+
+    public int getNbrDechambre() {
+        return nbrDechambre;
+    }
+
+    public void setNbrDechambre(int nbrDechambre) {
+        this.nbrDechambre = nbrDechambre;
+    }
+
+    public int getNbrlit() {
+        return nbrlit;
+    }
+
+    public void setNbrlit(int nbrlit) {
+        this.nbrlit = nbrlit;
     }
 }

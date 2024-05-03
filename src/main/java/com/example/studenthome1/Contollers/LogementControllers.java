@@ -1,6 +1,7 @@
 package com.example.studenthome1.Contollers;
 
 
+import com.example.studenthome1.dtos.Message;
 import com.example.studenthome1.entities.Logement;
 import com.example.studenthome1.entities.Proprietaire;
 import com.example.studenthome1.entities.Ville;
@@ -28,6 +29,38 @@ public class LogementControllers {
         this.logementServiceImpt=logementServiceImpt;
 
     }
+
+
+    @GetMapping("/afficherlogmentbyid")
+    public Logement ajouterLogement(@RequestBody int id) {
+
+        return logementRepository.findById(id).orElse(null);
+
+    }
+
+
+    @GetMapping("/delete")
+    public String delete(@RequestBody int id) {
+
+        Logement logement=logementRepository.findById(id).orElse(null);
+        if(logement!=null){
+            logementRepository.delete(logement);
+            return new Message("suprimer").toString();
+        }
+        return new Message("probleme dans id").toString();
+
+    }
+
+    @GetMapping("/deleteAll")
+    public String delete() {
+
+
+        logementRepository.deleteAll();
+        return new Message("surpmer tout").toString();
+
+    }
+
+
     @GetMapping("/afficherAlllogement")
     public List<Logement> ajouterLogement() {
         Proprietaire proprietaire = null;
@@ -44,5 +77,15 @@ public class LogementControllers {
            return logementServiceImpt.afficherAlllogementByindex(index);
         }
          return null;
+    }
+
+    @GetMapping("/afficherAllLogementBySearch")
+    public List<Logement> afficherAlllogmentBySearch(@RequestParam String search){
+        Proprietaire proprietaire=null;
+
+        if(!search.isEmpty() && ! search.equals("")){
+            return logementServiceImpt.afficherAlllogmentBySearch(search);
+        }
+        return null;
     }
 }
