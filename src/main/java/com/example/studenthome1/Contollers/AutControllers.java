@@ -24,6 +24,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 
 import java.util.List;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/aut")
 public class AutControllers {

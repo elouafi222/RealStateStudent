@@ -21,6 +21,7 @@ import java.lang.reflect.Member;
 import java.util.ArrayList;
 import java.util.List;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/proprietere")
 public class ProprietereControllers {
