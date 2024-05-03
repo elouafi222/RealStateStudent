@@ -33,7 +33,7 @@ public class LogementControllers {
 
 
     @GetMapping("/afficherlogmentbyid")
-    public Logement ajouterLogement(@RequestBody int id) {
+    public Logement ajouterLogement(@RequestParam int id) {
 
         return logementRepository.findById(id).orElse(null);
 
@@ -41,7 +41,7 @@ public class LogementControllers {
 
 
     @GetMapping("/delete")
-    public String delete(@RequestBody int id) {
+    public String delete(@RequestParam int id) {
 
         Logement logement=logementRepository.findById(id).orElse(null);
         if(logement!=null){
@@ -54,8 +54,6 @@ public class LogementControllers {
 
     @GetMapping("/deleteAll")
     public String delete() {
-
-
         logementRepository.deleteAll();
         return new Message("surpmer tout").toString();
 
@@ -89,4 +87,12 @@ public class LogementControllers {
         }
         return null;
     }
+
+    @GetMapping("/alllogement")
+    public int afficherAlllogmentBySearch(){
+
+        return logementRepository.findAll().size();
+
+    }
+
 }

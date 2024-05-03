@@ -44,7 +44,7 @@ public  class Logement {
     @OneToMany(mappedBy = "logement", cascade = CascadeType.ALL)
     private List<Location> locations;
 
-    @JsonIgnore
+    //@JsonIgnore
     @ManyToOne
     @JoinColumn(name = "proprietaire_id")
     private Proprietaire proprietaire;
