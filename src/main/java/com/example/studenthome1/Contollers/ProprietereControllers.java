@@ -15,6 +15,8 @@ import com.example.studenthome1.services.LogementServiceImpt;
 import com.example.studenthome1.services.VilleServiceImp;
 import com.example.studenthome1.services.impl.ProprietaireServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Member;
@@ -75,7 +77,7 @@ public class ProprietereControllers {
     }
 
     @PostMapping("/ajouterLogement")
-    public Logement ajouterLogement(HttpServletRequest request, @RequestBody LogementModel logementModel) {
+    public ResponseEntity<?> ajouterLogement(HttpServletRequest request, @RequestBody LogementModel logementModel) {
         Proprietaire proprietaire = null;
 
         String jwt = request.getHeader("Authorization");
@@ -84,35 +86,39 @@ public class ProprietereControllers {
             String token = jwt.substring(7);
             Long proprietaireId = jwtServiceImp.extractId(token);
 
-
-            Ville ville= villeServiceImp.findByname(logementModel.getVilleNon());
-            if(ville==null){
+            Ville ville = villeServiceImp.findByname(logementModel.getVilleNon());
+            if (ville == null) {
                 ville = new Ville(logementModel.getVilleNon(), logementModel.getCodePostal());
                 Ville savedVille = villeRepository.save(ville);
             }
 
-            if(logementModel.getAdresse().isEmpty() || logementModel.getAdresse().equals("")|| logementModel.getDescription().isEmpty()|| logementModel.getDescription().equals("")||logementModel.getCodePostal().isEmpty()||logementModel.getCodePostal().equals(""))
-                return null;
-            // Créer une nouvelle instance de Logement avec la Ville sauvegardée
-            Logement logement = new Logement(logementModel.getSuperficie(), logementModel.getAdresse(),
-                    logementModel.getDescription(), logementModel.getPrix(),
-                    true, ville, null, null, null, proprietaire, null,logementModel.getNbrDechambre(),logementModel.getNbrlit());
+            if (logementModel.getAdresse() == null || logementModel.getAdresse().isEmpty() ||
+                    logementModel.getDescription() == null || logementModel.getDescription().isEmpty() ||
+                    logementModel.getCodePostal() == null || logementModel.getCodePostal().isEmpty()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Tous les champs doivent être remplis.");
 
-            // Ajouter les images au logement
-            List<Image> images = new ArrayList<>();
-            logementModel.getImages().forEach(val -> images.add(new Image(val, logement)));
-            logement.setImages(images);
+        } else {
+                // Créer une nouvelle instance de Logement avec la Ville sauvegardée
+                Logement logement = new Logement(logementModel.getSuperficie(), logementModel.getAdresse(),
+                        logementModel.getDescription(), logementModel.getPrix(),
+                        true, ville, null, null, null, proprietaire, null, logementModel.getNbrDechambre(), logementModel.getNbrlit());
 
-            // Ajouter le logement au propriétaire
-            proprietaireService.ajouterLogement(proprietaireId, logement);
+                // Ajouter les images au logement
+                List<Image> images = new ArrayList<>();
+                logementModel.getImages().forEach(val -> images.add(new Image(val, logement)));
+                logement.setImages(images);
 
-            return logement;
+                // Ajouter le logement au propriétaire
+                proprietaireService.ajouterLogement(proprietaireId, logement);
+
+                return ResponseEntity.ok(logement);
+            }
         } else {
             System.out.println("-------------------------------- probleme");
-            return null;
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token d'autorisation manquant ou invalide.");
         }
-
     }
+
 
 
     @PostMapping("/afficherAllLogementByid")
