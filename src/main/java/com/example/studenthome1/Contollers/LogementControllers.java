@@ -78,15 +78,26 @@ public class LogementControllers {
          return null;
     }
 
-    @GetMapping("/afficherAllLogementBySearch")
-    public List<Logement> afficherAlllogmentBySearch(@RequestParam String search){
-        Proprietaire proprietaire=null;
+    @GetMapping("/afficherAllLogementBySearchandIndex")
+    public List<Logement> afficherAlllogmentBySearch(@RequestParam String search,@RequestParam int index){
+
+        if(index<=0)
+            index=1;
 
         if(!search.isEmpty() && ! search.equals("")){
-            return logementServiceImpt.afficherAlllogmentBySearch(search);
+            return logementServiceImpt.afficherAlllogmentBySearchandIndex(search,index);
         }
+
+        if(index>0){
+            return logementServiceImpt.afficherAlllogementByindex(index);
+        }
+
+
         return null;
     }
+
+
+
 
     @GetMapping("/alllogement")
     public int afficherAlllogmentBySearch(){
