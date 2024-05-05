@@ -97,6 +97,21 @@ public class LogementControllers {
     }
 
 
+    @GetMapping("/nbrLogmentSearch")
+    public int afficherAlllogmentBySearch(@RequestParam String search){
+
+
+
+        if(!search.isEmpty() && ! search.equals("")){
+            return logementServiceImpt.afficherAlllogmentBySearch(search).size();
+        }
+        return 0;
+    }
+
+
+
+
+
 
 
     @GetMapping("/alllogement")

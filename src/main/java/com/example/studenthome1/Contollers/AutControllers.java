@@ -53,7 +53,7 @@ public class AutControllers {
         Proprietaire proprietaire= proprietaireService.getByEmail(authRequestDTO.getEmail());
         if(proprietaire!=null){
             long id= proprietaire.getId();
-            return ResponseEntity.ok(new  JwtResponseDTO(jwtServiceImp.GenerateToken(authRequestDTO.getEmail(),id)));
+            return ResponseEntity.ok(new  JwtResponseDTO(jwtServiceImp.GenerateToken(authRequestDTO.getEmail(),id),proprietaire.getId(),proprietaire.getNom(),proprietaire.getPrenom(),proprietaire.getEmail(),proprietaire.getNumeroTel()));
         }
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("in des champs et invalid");
