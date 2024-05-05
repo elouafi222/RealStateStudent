@@ -6,6 +6,7 @@ import com.example.studenthome1.dtos.AuthRequestDTO;
 import com.example.studenthome1.dtos.JwtResponseDTO;
 import com.example.studenthome1.dtos.Message;
 import com.example.studenthome1.entities.Proprietaire;
+import com.example.studenthome1.mappers.ProprietaireMapper;
 import com.example.studenthome1.model.SignUnRequest;
 
 import com.example.studenthome1.repositories.PartuculierReposotory;
@@ -13,6 +14,8 @@ import com.example.studenthome1.repositories.ProprietaireRepository;
 import com.example.studenthome1.services.ProprietaireService;
 import com.example.studenthome1.services.impl.ProprietaireServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 import org.springframework.security.core.Authentication;
@@ -45,15 +48,15 @@ public class AutControllers {
     }
 
     @PostMapping("/signInParticulier")
-    public JwtResponseDTO AuthenticateAndGetToken(@RequestBody AuthRequestDTO authRequestDTO){
+    public ResponseEntity<?> AuthenticateAndGetToken(@RequestBody AuthRequestDTO authRequestDTO){
 
         Proprietaire proprietaire= proprietaireService.getByEmail(authRequestDTO.getEmail());
         if(proprietaire!=null){
             long id= proprietaire.getId();
-            return new JwtResponseDTO(jwtServiceImp.GenerateToken(authRequestDTO.getEmail(),id));
+            return ResponseEntity.ok(new  JwtResponseDTO(jwtServiceImp.GenerateToken(authRequestDTO.getEmail(),id)));
         }
 
-        return null;
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("in des champs et invalid");
         /*
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequestDTO.getEmail(), authRequestDTO.getPassword()));
         if(authentication.isAuthenticated()){
@@ -67,18 +70,18 @@ public class AutControllers {
     }
 
     @PostMapping("/signUpParticulier")
-    public String signupPrt(@RequestBody SignUnRequest signUnRequest){
+    public ResponseEntity<?> signupPrt(@RequestBody SignUnRequest signUnRequest){
 
         if(!signUnRequest.getNom().isEmpty() && !signUnRequest.getNom().equals("") && !signUnRequest.getPrenon().isEmpty()&& !signUnRequest.getEmail().isEmpty() && !signUnRequest.getEmail().equals("")&&!signUnRequest.getAdresse().isEmpty()&& !signUnRequest.getAdresse().equals("")&&!signUnRequest.getNumeroTel().isEmpty()&&!signUnRequest.getNumeroTel().equals("") && !signUnRequest.getPassword().isEmpty()&& !signUnRequest.getPassword().equals("")){
 
             Proprietaire objcreer = new Proprietaire(signUnRequest.getNom(), signUnRequest.getPrenon(),signUnRequest.getEmail() ,signUnRequest.getAdresse(), signUnRequest.getNumeroTel(), signUnRequest.getTypePropritaire(),signUnRequest.getPassword(), null);
             proprietaireRepository.save(objcreer);
 
-            return objcreer.toString();
+            return ResponseEntity.ok(ProprietaireMapper.mapToProprietaireDTO(objcreer));
 
         }
 
-        return new Message("remplir tout les champ").toString();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("remplir tout les champ");
 
     }
 

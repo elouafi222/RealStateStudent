@@ -1,7 +1,16 @@
 package com.example.studenthome1.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.List;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class LogementModel {
 
     private float superficie;
@@ -17,8 +26,6 @@ public class LogementModel {
 
     private int nbrDechambre;
     private int nbrlit;
-    public LogementModel() {
-    }
 
     public LogementModel(float superficie, String adresse, String description, float prix, boolean disponible, String villeNon, String codePostal,List<String> images) {
         this.superficie = superficie;
@@ -33,20 +40,7 @@ public class LogementModel {
         this.nbrlit=0;
     }
 
-    public LogementModel(float superficie, String adresse, String description, float prix, boolean disponible, String villeNon, String codePostal,List<String> images,int nbrDechambre,int nbrlit) {
-        this.superficie = superficie;
-        Adresse = adresse;
-        Description = description;
-        this.prix = prix;
-        this.disponible = disponible;
-        this.villeNon = villeNon;
-        this.codePostal = codePostal;
-        this.images=images;
-        this.nbrDechambre=0;
-        this.nbrlit=0;
-        this.nbrDechambre=nbrDechambre;
-        this.nbrlit=nbrlit;
-    }
+
 
     public float getSuperficie() {
         return superficie;
