@@ -1,6 +1,7 @@
 package com.example.studenthome1.Contollers;
 
 
+import com.example.studenthome1.dtos.LogementUpdateDto;
 import com.example.studenthome1.dtos.Message;
 import com.example.studenthome1.entities.Logement;
 import com.example.studenthome1.entities.Proprietaire;
@@ -51,6 +52,27 @@ public class LogementControllers {
         return new Message("probleme dans id").toString();
 
     }
+
+    @PutMapping("/update")
+    public String update(@RequestParam int id,@RequestBody LogementUpdateDto logementUpdateDto) {
+
+        Logement logement=logementRepository.findById(id).orElse(null);
+        if(logement!=null){
+            logement.setSuperficie(logementUpdateDto.getSuperficie());
+            logement.setAdresse(logementUpdateDto.getAdresse());
+            logement.setDescription(logementUpdateDto.getDescription());
+            logement.setPrix(logementUpdateDto.getPrix());
+            logement.setDisponible(logementUpdateDto.isDisponible());
+
+            logementRepository.save(logement);
+            return new Message("suprimer").toString();
+        }
+        return new Message("probleme dans id").toString();
+
+    }
+
+
+
 
     @GetMapping("/deleteAll")
     public String delete() {
