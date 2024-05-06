@@ -47,7 +47,7 @@ public class LogementControllers {
         Logement logement = logementRepository.findById(id).orElse(null);
         if (logement != null) {
             logementRepository.delete(logement);
-            return new Message("update logment").toString();
+            return new Message("supprimer").toString();
         }
         return new Message("problème dans l'ID").toString();
 
@@ -64,9 +64,11 @@ public class LogementControllers {
             logement.setDescription(logementUpdateDto.getDescription());
             logement.setPrix(logementUpdateDto.getPrix());
             logement.setDisponible(logementUpdateDto.isDisponible());
+            logement.setNbrDechambre(logementUpdateDto.getNbrDechambre());
+            logement.setNbrlit(logementUpdateDto.getNbrlit());
 
             logementRepository.save(logement);
-            return new Message("suprimer").toString();
+            return new Message("update logment").toString();
         }
         return new Message("probleme dans id").toString();
 
