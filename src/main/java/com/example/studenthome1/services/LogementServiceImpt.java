@@ -41,13 +41,27 @@ public class LogementServiceImpt {
 
         if (index > 0) {
 
+            /*
             Pageable pageable = PageRequest.of(index - 1, nbrafficher);
+            List<Logement> logementstriee1=logementRepository.findAll();
+            Collections.sort(logementstriee1);
             Page<Logement> logementsPage = logementRepository.findAll(pageable);
             List<Logement> logementstriee=new ArrayList<>(logementsPage.getContent());
-            Collections.sort(logementstriee);
-            return logementstriee;
-        } else
-            return null;
+
+
+             */
+
+            List<Logement> logementstriee1=logementRepository.findAll();
+            Collections.sort(logementstriee1);
+
+            return recupererLogementParIndex(logementstriee1,index,nbrafficher);
+        } else{
+            List<Logement> logementstriee1=logementRepository.findAll();
+            Collections.sort(logementstriee1);
+
+            return recupererLogementParIndex(logementstriee1,0,nbrafficher);
+        }
+
 
     }
 
@@ -92,10 +106,14 @@ public class LogementServiceImpt {
             ver = 0;
             int finalEntier = entier;
 
-            return recupererLogementParIndex(logementRepository.findAll().stream().filter(val -> val.getNbrDechambre() == finalEntier || val.getNbrlit() == finalEntier).toList(),index,nbrafficher);
+            List<Logement> logementstrie=logementRepository.findAll();
+            Collections.sort(logementstrie);
+            return recupererLogementParIndex(logementstrie.stream().filter(val -> val.getNbrDechambre() == finalEntier || val.getNbrlit() == finalEntier).toList(),index,nbrafficher);
 
         } else {
-            return recupererLogementParIndex(logementRepository.findAll().stream().filter(val -> val.getAdresse().contains(search) || val.getDescription().contains(search) || val.getVille().getNom().contains(search) || val.getVille().getCodePostal().contains(search)).toList(),index,nbrafficher);
+            List<Logement> logementstrie=logementRepository.findAll();
+            Collections.sort(logementstrie);
+            return recupererLogementParIndex(logementstrie.stream().filter(val -> val.getAdresse().contains(search) || val.getDescription().contains(search) || val.getVille().getNom().contains(search) || val.getVille().getCodePostal().contains(search)).toList(),index,nbrafficher);
         }
 
     }
@@ -106,9 +124,7 @@ public class LogementServiceImpt {
         int starindex=index*nbraffiche;
         int endindex=Math.min(starindex+nbraffiche,size);
         if(starindex<size){
-            List<Logement> logementstriee=logements.subList(starindex,endindex);
-            Collections.sort(logementstriee);
-            return  logementstriee;
+            return  logements.subList(starindex,endindex);
         }
 
 
