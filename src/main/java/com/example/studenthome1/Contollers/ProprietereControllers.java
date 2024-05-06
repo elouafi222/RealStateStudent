@@ -67,7 +67,7 @@ public class ProprietereControllers {
     }
 
 
-    @DeleteMapping("/delete")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteprop(@PathVariable int id){
          int val= proprietaireService.deleteProprietere((long)id);
          if(val==1)
