@@ -89,9 +89,10 @@ public class ProprietereControllers {
         proprietaire.setNumeroTel(proprietaireDTO2.getNumeroTel());
         proprietaireRepository.save(proprietaire);
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("the id of user is not correct");
+        return ResponseEntity.ok(proprietaire);
     }
-    return ResponseEntity.ok(proprietaire);
+
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("the id of user is not correct");
 
 }
 
