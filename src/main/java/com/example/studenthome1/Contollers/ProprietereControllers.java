@@ -1,7 +1,10 @@
 package com.example.studenthome1.Contollers;
 
 
+import com.example.studenthome1.dtos.LogementUpdateDto;
 import com.example.studenthome1.dtos.Message;
+import com.example.studenthome1.dtos.ProprietaireDTO;
+import com.example.studenthome1.dtos.ProprietaireDTO2;
 import com.example.studenthome1.entities.Image;
 import com.example.studenthome1.entities.Logement;
 import com.example.studenthome1.entities.Proprietaire;
@@ -36,13 +39,16 @@ public class ProprietereControllers {
 
     private final VilleServiceImp villeServiceImp;
 
+    private final   ProprietaireRepository proprietaireRepository;
 
-    public ProprietereControllers(ProprietaireServiceImpl proprietaireService,JwtServiceImp jwtServiceImp,LogementServiceImpt logementServiceImpt,VilleRepository villeRepository,VilleServiceImp villeServiceImp) {
+
+    public ProprietereControllers(ProprietaireServiceImpl proprietaireService,JwtServiceImp jwtServiceImp,LogementServiceImpt logementServiceImpt,VilleRepository villeRepository,VilleServiceImp villeServiceImp,ProprietaireRepository proprietaireRepository) {
         this.proprietaireService = proprietaireService;
         this.jwtServiceImp=jwtServiceImp;
         this.logementServiceImpt=logementServiceImpt;
         this.villeRepository=villeRepository;
         this.villeServiceImp=villeServiceImp;
+        this.proprietaireRepository=proprietaireRepository;
     }
 
 
@@ -52,6 +58,7 @@ public class ProprietereControllers {
 
         if(!signUnRequest.getNom().isEmpty()&& !signUnRequest.getPrenon().isEmpty() && !signUnRequest.getEmail().isEmpty() && !signUnRequest.getAdresse().isEmpty() && !signUnRequest.getNumeroTel().isEmpty() &&!signUnRequest.getTypePropritaire().isEmpty()&& !signUnRequest.getPassword().isEmpty()){
 
+
             proprietaireService.ajouterpropiretre(signUnRequest.getNom(), signUnRequest.getPrenon(),signUnRequest.getEmail(), signUnRequest.getAdresse(), signUnRequest.getNumeroTel(), signUnRequest.getTypePropritaire(), signUnRequest.getPassword(),null);
             return new Message("bien creer").toString();
         }
@@ -59,20 +66,42 @@ public class ProprietereControllers {
         return new Message("un ou plusieur champ vide").toString();
     }
 
-    @PostMapping("/delete")
-    public String deleteprop(HttpServletRequest request){
 
-        String jwt= request.getHeader("Authorization");
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteprop(@PathVariable int id){
+         int val= proprietaireService.deleteProprietere((long)id);
+         if(val==1)
+             return ResponseEntity.ok().body("bien suprirmer");
 
-        if(jwt!=null && jwt.startsWith("Bearer ")){
-            String token=jwt.substring(7);
-            Long id=jwtServiceImp.extractId(token);
-            proprietaireService.deleteProprietere(id);
-
-            return new Message("bien suprimer").toString();
+         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("the id is not correct");
         }
 
-        return new Message("probleme dans le token").toString();
+
+     @PutMapping("/update/{id}")
+     public ResponseEntity<?> update(@PathVariable int id,@RequestBody ProprietaireDTO2 proprietaireDTO2) {
+
+
+    Proprietaire proprietaire=proprietaireRepository.findById((long)id).orElse(null);
+    if(proprietaire!=null){
+        proprietaire.setNom(proprietaireDTO2.getNom());
+        proprietaire.setPrenom(proprietaireDTO2.getPrenon());
+        proprietaire.setAdresse(proprietaireDTO2.getAdresse());
+        proprietaire.setNumeroTel(proprietaireDTO2.getNumeroTel());
+        proprietaireRepository.save(proprietaire);
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("the id of user is not correct");
+    }
+    return ResponseEntity.ok(proprietaire);
+
+}
+
+    @GetMapping("/afficherByid")
+    public ResponseEntity<?> afficherbyid(@RequestParam long id){
+
+        Proprietaire proprietaire= proprietaireRepository.findById((id)).orElse(null);
+        if(proprietaire==null)
+           return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("propriatiare is not found");
+        return ResponseEntity.ok(proprietaire);
 
     }
 
@@ -137,6 +166,8 @@ public class ProprietereControllers {
             return null;
 
     }
+
+
 
 
     @GetMapping("/afficherAllPropritere")

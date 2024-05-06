@@ -41,20 +41,21 @@ public class LogementControllers {
     }
 
 
-    @GetMapping("/delete")
-    public String delete(@RequestParam int id) {
+    @DeleteMapping("/delete/{id}")
+    public String delete(@PathVariable int id) {
 
-        Logement logement=logementRepository.findById(id).orElse(null);
-        if(logement!=null){
+        Logement logement = logementRepository.findById(id).orElse(null);
+        if (logement != null) {
             logementRepository.delete(logement);
-            return new Message("suprimer").toString();
+            return new Message("supprimer").toString();
         }
-        return new Message("probleme dans id").toString();
+        return new Message("problème dans l'ID").toString();
 
     }
 
-    @PutMapping("/update")
-    public String update(@RequestParam int id,@RequestBody LogementUpdateDto logementUpdateDto) {
+
+    @PutMapping("/update/{id}")
+    public String update(@PathVariable int id,@RequestBody LogementUpdateDto logementUpdateDto) {
 
         Logement logement=logementRepository.findById(id).orElse(null);
         if(logement!=null){
