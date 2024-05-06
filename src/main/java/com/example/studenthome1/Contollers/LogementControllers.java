@@ -47,7 +47,7 @@ public class LogementControllers {
         Logement logement = logementRepository.findById(id).orElse(null);
         if (logement != null) {
             logementRepository.delete(logement);
-            return new Message("supprimer").toString();
+            return new Message("update logment").toString();
         }
         return new Message("problème dans l'ID").toString();
 
