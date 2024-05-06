@@ -1,5 +1,6 @@
 package com.example.studenthome1.entities;
 
+import com.example.studenthome1.dtos.LogmentModel;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
@@ -17,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "logement_type")
-public  class Logement {
+public  class Logement  implements Comparable<Logement>  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -52,6 +53,9 @@ public  class Logement {
 
     @OneToMany(mappedBy = "logement", cascade = CascadeType.ALL)
     private List<Image> images;
+
+
+
 
     public Logement(float superficie, String adresse, String description, float prix, boolean disponible, Ville ville, List<Commentaire> commentaires, Float noteGlobale, List<Location> locations, Proprietaire proprietaire,List<Image> images) {
         this.superficie = superficie;
@@ -99,4 +103,14 @@ public  class Logement {
         noteGlobale = (float) totalNotes / commentaires.size();
     }
 
+    @Override
+    public int compareTo(Logement autreLogement) {
+        if (this.id < autreLogement.id) {
+            return 1; // L'objet courant est inférieur à l'objet passé en paramètre
+        } else if (this.id > autreLogement.id) {
+            return -1; // L'objet courant est supérieur à l'objet passé en paramètre
+        } else {
+            return 0; // Les deux objets sont considérés égaux
+        }
+    }
 }

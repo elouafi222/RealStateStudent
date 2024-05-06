@@ -13,6 +13,8 @@ import com.example.studenthome1.services.LogementServiceImpt;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @CrossOrigin(origins = "*")
@@ -88,7 +90,9 @@ public class LogementControllers {
     @GetMapping("/afficherAlllogement")
     public List<Logement> ajouterLogement() {
         Proprietaire proprietaire = null;
-        return logementRepository.findAll();
+        List<Logement> logements=logementRepository.findAll();
+        Collections.sort(logements);
+        return logements;
 
     }
 

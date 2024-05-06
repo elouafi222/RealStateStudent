@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -40,7 +43,9 @@ public class LogementServiceImpt {
 
             Pageable pageable = PageRequest.of(index - 1, nbrafficher);
             Page<Logement> logementsPage = logementRepository.findAll(pageable);
-            return logementsPage.getContent();
+            List<Logement> logementstriee=new ArrayList<>(logementsPage.getContent());
+            Collections.sort(logementstriee);
+            return logementstriee;
         } else
             return null;
 
@@ -100,8 +105,12 @@ public class LogementServiceImpt {
         index=index-1;
         int starindex=index*nbraffiche;
         int endindex=Math.min(starindex+nbraffiche,size);
-        if(starindex<size)
-          return  logements.subList(starindex,endindex);
+        if(starindex<size){
+            List<Logement> logementstriee=logements.subList(starindex,endindex);
+            Collections.sort(logementstriee);
+            return  logementstriee;
+        }
+
 
         return null;
 
