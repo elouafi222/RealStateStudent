@@ -15,7 +15,7 @@ public class EtudiantDTO {
     private String prenom;
     private String adresseMail;
     private String numeroTel;
-    private Date dateNaissance;
+    private String dateNaissance;
     private String universite;
 
 }

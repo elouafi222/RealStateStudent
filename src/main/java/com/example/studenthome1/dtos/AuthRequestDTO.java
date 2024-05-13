@@ -13,5 +13,5 @@ public class AuthRequestDTO {
 
     private String email;
     private String password;
-    private String typeUser; ///etudian ou propiietaire
+    private String typeUser; ///etudiant ou propiietaire
 }

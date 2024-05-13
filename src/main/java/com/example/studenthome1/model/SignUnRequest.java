@@ -1,5 +1,7 @@
 package com.example.studenthome1.model;
 
+import java.util.Date;
+
 public class SignUnRequest {
 
     private String nom;
@@ -11,6 +13,7 @@ public class SignUnRequest {
     private String adresse;
     private String numeroTel;
     private String typePropritaire;
+
 
     public SignUnRequest() {
     }
@@ -24,6 +27,8 @@ public class SignUnRequest {
         this.numeroTel = numeroTel;
         this.typePropritaire = typePropritaire;
     }
+
+
 
     public String getNom() {
         return nom;
@@ -76,6 +81,8 @@ public class SignUnRequest {
     public String getTypePropritaire() {
         return typePropritaire;
     }
+
+
 
     public void setTypePropritaire(String typePropritaire) {
         this.typePropritaire = typePropritaire;

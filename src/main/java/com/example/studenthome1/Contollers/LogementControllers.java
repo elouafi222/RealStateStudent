@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -148,6 +149,36 @@ public class LogementControllers {
 
         return logementRepository.findAll().size();
 
+    }
+
+    @GetMapping("/filtreLogement")
+    public List<Logement> filtreLogement(@RequestParam(required = false) String ville,
+                                         @RequestParam(required = false) Double prix,
+                                         @RequestParam(required = false) Integer nbrChambres) {
+        List<Logement> logements = logementRepository.findAll();
+
+        // Filtrage par ville si spécifiée
+        if (ville != null && !ville.isEmpty()) {
+            logements = logements.stream()
+                    .filter(logement -> logement.getVille().getNom().equalsIgnoreCase(ville))
+                    .collect(Collectors.toList());
+        }
+
+        // Filtrage par prix si spécifié
+        if (prix != null) {
+            logements = logements.stream()
+                    .filter(logement -> logement.getPrix() <= prix)
+                    .collect(Collectors.toList());
+        }
+
+        // Filtrage par nombre de chambres si spécifié
+        if (nbrChambres != null) {
+            logements = logements.stream()
+                    .filter(logement -> logement.getNbrDechambre() >= nbrChambres)
+                    .collect(Collectors.toList());
+        }
+
+        return logements;
     }
 
 }

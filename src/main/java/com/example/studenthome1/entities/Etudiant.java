@@ -24,7 +24,7 @@ public class Etudiant {
     private String adresseMail;
     private String password;
     private String numeroTel;
-    private Date dateNaissance;
+    private String dateNaissance;
     private String universite;
 
     @OneToMany(mappedBy = "etudiant", cascade = CascadeType.ALL)
@@ -33,7 +33,18 @@ public class Etudiant {
     @OneToMany(mappedBy = "etudiant", cascade = CascadeType.ALL)
     private List<Commentaire> commentaires;
 
-    public Etudiant(long id, String nom, String prenom, String adresseMail, String numeroTel, Date dateNaissance, String universite) {
+    public Etudiant(String nom, String prenom, String adresseMail, String numeroTel, String dateNaissance, String universite, String password) {
+        this.nom = nom;
+        this.prenom = prenom;
+        this.adresseMail = adresseMail;
+        this.numeroTel = numeroTel;
+        this.dateNaissance = dateNaissance;
+        this.universite = universite;
+        this.password=password;
+    }
+
+
+    public Etudiant(long id, String nom, String prenom, String adresseMail, String numeroTel, String dateNaissance, String universite) {
         this.id = id;
         this.nom = nom;
         this.prenom = prenom;
@@ -42,6 +53,4 @@ public class Etudiant {
         this.dateNaissance = dateNaissance;
         this.universite = universite;
     }
-
-
 }
