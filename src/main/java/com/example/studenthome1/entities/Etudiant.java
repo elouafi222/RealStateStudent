@@ -1,5 +1,6 @@
 package com.example.studenthome1.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,9 +28,11 @@ public class Etudiant {
     private String dateNaissance;
     private String universite;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "etudiant", cascade = CascadeType.ALL)
     private List<Location> locations;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "etudiant", cascade = CascadeType.ALL)
     private List<Commentaire> commentaires;
 

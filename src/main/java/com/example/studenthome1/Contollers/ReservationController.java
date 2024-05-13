@@ -3,17 +3,18 @@ package com.example.studenthome1.Contollers;
 import com.example.studenthome1.entities.Etudiant;
 import com.example.studenthome1.entities.Logement;
 import com.example.studenthome1.entities.Location;
+import com.example.studenthome1.model.ReservationModel;
 import com.example.studenthome1.repositories.EtudiantRepository;
 import com.example.studenthome1.repositories.LocationRepository;
 import com.example.studenthome1.repositories.LogementRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 
+@CrossOrigin(origins = "*")
 @RestController
+@RequestMapping("/Reservation")
 public class ReservationController {
 
     @Autowired
@@ -29,15 +30,12 @@ public class ReservationController {
     }
 
     @PostMapping("/reservation")
-    public String faireReservation(@RequestParam Long idEtudiant,
-                                   @RequestParam int idLogement,
-                                   @RequestParam Date dateDebut,
-                                   @RequestParam Date dateFin) {
+    public String faireReservation(@RequestBody ReservationModel reservationModel) {
 
         // Vous devriez récupérer l'étudiant et le logement correspondant aux IDs à partir de votre repository
 
-        Etudiant etudiant = etudiantRepository.findById(idEtudiant).orElse(null);
-        Logement logement = logementRepository.findById(idLogement).orElse(null);
+        Etudiant etudiant = etudiantRepository.findById(reservationModel.getIdEtudiant()).orElse(null);
+        Logement logement = logementRepository.findById(reservationModel.getIdLogement()).orElse(null);
 
         if (etudiant == null || logement == null) {
             return "Étudiant ou logement non trouvé";
@@ -47,8 +45,11 @@ public class ReservationController {
         Location reservation = new Location();
         reservation.setEtudiant(etudiant);
         reservation.setLogement(logement);
-        reservation.setDateDébut(dateDebut);
-        reservation.setDateFin(dateFin);
+        reservation.setDateDébut(reservationModel.getDateDebut());
+        reservation.setDateFin(reservationModel.getDateFin());
+
+        logement.setDisponible(false);
+        logementRepository.save(logement);
 
         // Enregistrer la réservation dans la base de données
         locationRepository.save(reservation);
