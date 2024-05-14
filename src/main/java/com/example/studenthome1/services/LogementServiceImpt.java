@@ -118,6 +118,34 @@ public class LogementServiceImpt {
 
     }
 
+
+    public List<Logement> afficherAlllogmentBySearchandvarible(String ville,Integer prix,Integer nbrchambre, int index) {
+
+            List<Logement> logementstrie=logementRepository.findAll();
+            Collections.sort(logementstrie);
+
+            if(ville!=null && prix!=null &&nbrchambre!=null){
+
+                return recupererLogementParIndex(logementstrie.stream().filter(val -> val.getVille().equals(ville) && val.getPrix()==prix && val.getNbrDechambre() == nbrchambre).toList(),index,nbrafficher);
+            }
+
+            if(ville!=null)
+                logementstrie=logementstrie.stream().filter(val -> val.getAdresse().contains(ville) || val.getVille().getNom().contains(ville)).toList();
+
+            if(prix!=null)
+                logementstrie=logementstrie.stream().filter(val -> val.getPrix()==prix).toList();
+
+            if(nbrchambre!=null)
+                logementstrie=logementstrie.stream().filter(val -> val.getNbrDechambre()==nbrchambre).toList();
+
+            return recupererLogementParIndex(logementstrie,index,nbrafficher);
+
+
+
+
+    }
+
+
     public List<Logement> recupererLogementParIndex(List<Logement> logements,int index,int nbraffiche){
         int size=logements.size();
         index=index-1;

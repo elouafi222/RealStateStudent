@@ -10,6 +10,7 @@ import com.example.studenthome1.model.LogementModel;
 import com.example.studenthome1.repositories.LogementRepository;
 import com.example.studenthome1.services.JwtServiceImp;
 import com.example.studenthome1.services.LogementServiceImpt;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
 
@@ -153,32 +154,18 @@ public class LogementControllers {
 
     @GetMapping("/filtreLogement")
     public List<Logement> filtreLogement(@RequestParam(required = false) String ville,
-                                         @RequestParam(required = false) Double prix,
-                                         @RequestParam(required = false) Integer nbrChambres) {
-        List<Logement> logements = logementRepository.findAll();
+                                         @RequestParam(required = false) Integer prix,
+                                         @RequestParam(required = false) Integer nbrChambres,
+                                         @RequestParam int index) {
+        //List<Logement> logements = logementRepository.findAll();
 
-        // Filtrage par ville si spécifiée
-        if (ville != null && !ville.isEmpty()) {
-            logements = logements.stream()
-                    .filter(logement -> logement.getVille().getNom().equalsIgnoreCase(ville))
-                    .collect(Collectors.toList());
-        }
+        if (index <= 0)
+            index = 1;
 
-        // Filtrage par prix si spécifié
-        if (prix != null) {
-            logements = logements.stream()
-                    .filter(logement -> logement.getPrix() <= prix)
-                    .collect(Collectors.toList());
-        }
 
-        // Filtrage par nombre de chambres si spécifié
-        if (nbrChambres != null) {
-            logements = logements.stream()
-                    .filter(logement -> logement.getNbrDechambre() >= nbrChambres)
-                    .collect(Collectors.toList());
-        }
+        return logementServiceImpt.afficherAlllogmentBySearchandvarible(ville, prix, nbrChambres, index);
 
-        return logements;
     }
+
 
 }
